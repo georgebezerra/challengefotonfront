@@ -1,11 +1,17 @@
 import React from 'react'
+import { BrowserRouter as Router } from 'react-router-dom'
 
-function App() {
+import Routes from './routes'
+
+import GlobalStyle from './styles/global'
+
+export default function App() {
   return (
     <>
-      <h1>Funfou</h1>
+      <Router>
+        <Routes />
+      </Router>
+      <GlobalStyle />
     </>
   )
 }
-
-export default App
