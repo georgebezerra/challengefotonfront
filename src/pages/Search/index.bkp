@@ -1,0 +1,66 @@
+import React, { useState } from 'react'
+import axios from 'axios'
+
+interface IImage<T = Record<object, unknown>> {
+  imageLinks: {}
+  thumbnail: HTMLImageElement
+}
+
+interface IBook extends IImage {
+  id: string
+  title: string
+  volumeInfo: string
+}
+
+export default function Search() {
+  const [book, setBook] = useState('')
+  const [result, setResult] = useState<IBook[]>([])
+  const [apiKey, setApiKey] = useState(
+    'AIzaSyAOS63RE08B4HGarHw5vo25Hye10zZajFo'
+  )
+
+  function handleChange(event: any) {
+    const book = event.target.value
+
+    setBook(book)
+  }
+
+  function handleSubmit(event: any) {
+    event.preventDefault()
+
+    axios
+      .get(
+        'https://www.googleapis.com/books/v1/volumes?q=' +
+          book +
+          '&key=' +
+          apiKey +
+          '&maxResults=40'
+      )
+      .then(data => {
+        console.log(data.data.items)
+        setResult(data.data.items)
+      })
+  }
+
+  return (
+    <>
+      <h1>Book Search App</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <input
+            type="text"
+            onChange={handleChange}
+            autoComplete="off"
+            placeholder="Search from Books"
+          />
+        </div>
+        <button type="submit">Search</button>
+      </form>
+      {result.map(book => (
+        <span key={book.id}>
+          <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.title} />
+        </span>
+      ))}
+    </>
+  )
+}
